@@ -9,6 +9,21 @@
 #include <vector>
 #include <openssl/bn.h>
 
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+#define BN_FLG_MALLOCED 0x01
+struct bignum_st {
+    BN_ULONG *d;
+    int top;
+    int dmax;
+    int neg;
+    int flags;
+};
+inline void BN_init(BIGNUM *a)
+{
+    memset(a, 0, sizeof(*a));
+}
+#endif
+
 #include "util.h" // for uint64
 
 /** Errors thrown by the bignum class */
